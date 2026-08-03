@@ -2,13 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Buku extends Model
 {
-    use Hasfactory;
+    protected $table = 'buku';
 
-    protected $table = "buku";
-    protected $fillable = ['judul', 'pengarang', 'tanggal_publikasi'];
+    protected $fillable = [
+        'judul',
+        'pengarang',
+        'tanggal_publikasi',
+        'gambar'
+    ];
+
+    protected $appends = [
+        'gambar_url'
+    ];
+
+    protected function gambarUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->gambar
+                ? asset('storage/' . $this->gambar)
+                : null
+        );
+    }
 }
